@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from .models import Visitor
 
-# Create your views here.
+def track_visitor(request):
+    ip = request.META.get('REMOTE_ADDR')
+    Visitor.objects.get_or_create(ip_address=ip)
+    count = Visitor.objects.values('ip_address').distinct().count()
+    return JsonResponse({'unique_visitors': count})
