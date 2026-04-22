@@ -1,11 +1,13 @@
 import './App.css';
 import { useState, useEffect } from 'react';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 function App() {
-  // State för besökare, tid och bildspel
   const [visitors, setVisitors] = useState(0);
   const [time, setTime] = useState(new Date());
   const [currentImage, setCurrentImage] = useState(0);
+  const [date, setDate] = useState(new Date());
 
   const images = [
     'https://picsum.photos/800/400?random=1',
@@ -46,6 +48,10 @@ function App() {
 
       {/* Bildspel */}
       <img src={images[currentImage]} alt="bildspel" style={{width: '100%', maxWidth: '800px'}} />
+
+      {/* Kalender */}
+      <Calendar onChange={setDate} value={date} />
+      <p>Valt datum: {date.toLocaleDateString('sv-SE')}</p>
     </div>
   );
 }
