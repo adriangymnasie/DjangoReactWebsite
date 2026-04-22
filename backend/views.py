@@ -1,9 +1,8 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from .models import Visitor
 
-def home_page(request):
-    # Här kan du hämta saker från databasen senare
-    context = {
-        'message': 'Kopplingen till databasen myapp fungerar!'
-    }
-    # Här säger vi till Django att använda din HTML-fil
-    return render(request, 'index.html', context)
+def track_visitor(request):
+    ip = request.META.get('REMOTE_ADDR')
+    Visitor.objects.get_or_create(ip_address=ip)
+    count = Visitor.objects.values('ip_address').distinct().count()
+    return JsonResponse({'unique_visitors': count})
