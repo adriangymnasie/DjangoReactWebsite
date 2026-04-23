@@ -48,13 +48,13 @@ return (
       <p>Unika besökare: {visitors}</p>
 
       {/* Bildspel och kalender bredvid varandra */}
-      <div style={{display: 'flex', gap: '20px', alignItems: 'flex-start'}}>
-        <img src={images[currentImage]} alt="bildspel" style={{width: '60%', maxWidth: '800px'}} />
-        <div>
-          <Calendar onChange={setDate} value={date} />
-          <p>Valt datum: {date.toLocaleDateString('sv-SE')}</p>
-        </div>
-      </div>
+      <div style={{display: 'flex', flexWrap: 'nowrap', gap: '20px', alignItems: 'flex-start'}}>
+  <img src={images[currentImage]} alt="bildspel" style={{width: '50%'}} />
+  <div style={{flexShrink: 0}}>
+    <Calendar onChange={setDate} value={date} />
+    <p>Valt datum: {date.toLocaleDateString('sv-SE')}</p>
+  </div>
+</div>
     </div>
   );
 }
