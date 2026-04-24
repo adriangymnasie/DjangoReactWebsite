@@ -10,27 +10,28 @@ function App() {
   const [date, setDate] = useState(new Date());
   const [todos, setTodos] = useState([]);
   const [todoInput, setTodoInput] = useState('');
+  const [user, setUser] = useState(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   const images = [
     '/671.jpg',
-    '/267.jpg',
+    'https://picsum.photos/800/400?random=2',
     'https://picsum.photos/800/400?random=3',
   ];
 
-  // Hämta besökare från backend
   useEffect(() => {
     fetch('/api/visitors/')
       .then(res => res.json())
       .then(data => setVisitors(data.unique_visitors));
   }, []);
 
-  // Uppdatera klockan varje sekund
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  // Byt bild var 3:e sekund
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage(prev => (prev + 1) % images.length);
@@ -38,21 +39,68 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // Lägg till todo
   const addTodo = () => {
     if (todoInput.trim() === '') return;
     setTodos([...todos, todoInput]);
     setTodoInput('');
   };
 
-  // Ta bort todo
   const removeTodo = (index) => {
     setTodos(todos.filter((_, i) => i !== index));
   };
 
+  // Hanterar inloggning
+  const handleLogin = () => {
+    fetch('/api/login/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setUser(data.username);
+          setLoginError('');
+        } else {
+          setLoginError(data.error);
+        }
+      });
+  };
+
+  // Hanterar utloggning
+  const handleLogout = () => {
+    fetch('/api/logout/', { method: 'POST' })
+      .then(() => setUser(null));
+  };
+
+  // Inloggningssida
+  if (!user) {
+    return (
+      <div className="app" style={{maxWidth: '400px', margin: '100px auto'}}>
+        <h1>Logga in</h1>
+        <input
+          placeholder="Användarnamn"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
+          style={{display: 'block', marginBottom: '10px', width: '100%', padding: '8px'}}
+        />
+        <input
+          placeholder="Lösenord"
+          type="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          style={{display: 'block', marginBottom: '10px', width: '100%', padding: '8px'}}
+        />
+        {loginError && <p style={{color: 'red'}}>{loginError}</p>}
+        <button onClick={handleLogin} style={{padding: '8px 20px'}}>Logga in</button>
+      </div>
+    );
+  }
+
   return (
     <div className="app">
       <h1>Min Hemsida</h1>
+      <p>Inloggad som: {user} <button onClick={handleLogout}>Logga ut</button></p>
 
       {/* Datum och klocka */}
       <p>{time.toLocaleDateString('sv-SE')} {time.toLocaleTimeString('sv-SE')}</p>
