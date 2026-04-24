@@ -13,7 +13,7 @@ function App() {
 
   const images = [
     '/671.jpg',
-    '/67-is-a-number-and-a-meme-v0-h18v7rue24vf1',
+    '/267.jpg',
     'https://picsum.photos/800/400?random=3',
   ];
 
