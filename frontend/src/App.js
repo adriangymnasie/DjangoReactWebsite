@@ -30,6 +30,12 @@ function App() {
   }, []);
 
   useEffect(() => {
+    fetch('/api/me/', { credentials: 'include' })
+      .then(res => res.ok ? res.json() : null)
+      .then(data => { if (data?.success) setUser(data.username); });
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
@@ -59,6 +65,7 @@ function App() {
     fetch('/api/login/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ username, password }),
     })
       .then(res => res.json())
@@ -69,7 +76,8 @@ function App() {
         } else {
           setLoginError('❌ Fel användarnamn eller lösenord');
         }
-      });
+      })
+      .catch(() => setLoginError('❌ Kunde inte nå servern'));
   };
 
   const handleRegister = () => {
@@ -80,6 +88,7 @@ function App() {
     fetch('/api/register/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ username, password }),
     })
       .then(res => res.json())
@@ -91,7 +100,8 @@ function App() {
         } else {
           setLoginError('❌ ' + data.error);
         }
-      });
+      })
+      .catch(() => setLoginError('❌ Kunde inte nå servern'));
   };
 
   const handleLogout = () => {
