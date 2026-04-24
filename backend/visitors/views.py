@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .models import Visitor
@@ -31,3 +32,16 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return JsonResponse({'success': True})
+
+# Hanterar registrering
+@csrf_exempt
+def register_view(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get('username')
+        password = data.get('password')
+        if User.objects.filter(username=username).exists():
+            return JsonResponse({'success': False, 'error': 'Användarnamnet är redan taget'})
+        User.objects.create_user(username=username, password=password)
+        return JsonResponse({'success': True})
+    return JsonResponse({'error': 'Endast POST tillåtet'})

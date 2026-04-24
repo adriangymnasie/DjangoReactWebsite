@@ -14,6 +14,8 @@ function App() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [registerSuccess, setRegisterSuccess] = useState('');
 
   const images = [
     '/671.jpg',
@@ -49,8 +51,11 @@ function App() {
     setTodos(todos.filter((_, i) => i !== index));
   };
 
-  // Hanterar inloggning
   const handleLogin = () => {
+    if (!username || !password) {
+      setLoginError('Fyll i både användarnamn och lösenord');
+      return;
+    }
     fetch('/api/login/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -62,22 +67,45 @@ function App() {
           setUser(data.username);
           setLoginError('');
         } else {
-          setLoginError(data.error);
+          setLoginError('❌ Fel användarnamn eller lösenord');
         }
       });
   };
 
-  // Hanterar utloggning
+  const handleRegister = () => {
+    if (!username || !password) {
+      setLoginError('Fyll i både användarnamn och lösenord');
+      return;
+    }
+    fetch('/api/register/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setRegisterSuccess('✅ Konto skapat! Du kan nu logga in.');
+          setIsRegistering(false);
+          setLoginError('');
+        } else {
+          setLoginError('❌ ' + data.error);
+        }
+      });
+  };
+
   const handleLogout = () => {
     fetch('/api/logout/', { method: 'POST' })
       .then(() => setUser(null));
   };
 
-  // Inloggningssida
   if (!user) {
     return (
       <div className="app" style={{maxWidth: '400px', margin: '100px auto'}}>
-        <h1>Logga in</h1>
+        <h1>{isRegistering ? 'Skapa konto' : 'Logga in'}</h1>
+
+        {registerSuccess && <p style={{color: 'green'}}>{registerSuccess}</p>}
+
         <input
           placeholder="Användarnamn"
           value={username}
@@ -91,8 +119,20 @@ function App() {
           onChange={e => setPassword(e.target.value)}
           style={{display: 'block', marginBottom: '10px', width: '100%', padding: '8px'}}
         />
+
         {loginError && <p style={{color: 'red'}}>{loginError}</p>}
-        <button onClick={handleLogin} style={{padding: '8px 20px'}}>Logga in</button>
+
+        {isRegistering ? (
+          <>
+            <button onClick={handleRegister} style={{padding: '8px 20px', marginRight: '10px'}}>Skapa konto</button>
+            <button onClick={() => { setIsRegistering(false); setLoginError(''); }}>Tillbaka</button>
+          </>
+        ) : (
+          <>
+            <button onClick={handleLogin} style={{padding: '8px 20px', marginRight: '10px'}}>Logga in</button>
+            <button onClick={() => { setIsRegistering(true); setLoginError(''); }}>Skapa konto</button>
+          </>
+        )}
       </div>
     );
   }
