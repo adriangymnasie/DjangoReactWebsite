@@ -12,8 +12,8 @@ function App() {
   const [todoInput, setTodoInput] = useState('');
 
   const images = [
-    'https://picsum.photos/800/400?random=1',
-    'https://picsum.photos/800/400?random=2',
+    '/671.jpg',
+    '/67-is-a-number-and-a-meme-v0-h18v7rue24vf1',
     'https://picsum.photos/800/400?random=3',
   ];
 
