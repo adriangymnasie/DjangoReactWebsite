@@ -25,8 +25,9 @@ function App() {
 
   useEffect(() => {
     fetch('/api/visitors/')
-      .then(res => res.json())
-      .then(data => setVisitors(data.unique_visitors));
+      .then(res => res.ok ? res.json() : null)
+      .then(data => { if (data?.unique_visitors !== undefined) setVisitors(data.unique_visitors); })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
