@@ -2,7 +2,6 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
 import json
 from .models import Visitor
 
@@ -35,9 +34,10 @@ def logout_view(request):
     return JsonResponse({'success': True})
 
 # Returnerar inloggad användare (används vid sidladdning för att återställa session)
-@login_required
 def me_view(request):
-    return JsonResponse({'success': True, 'username': request.user.username})
+    if request.user.is_authenticated:
+        return JsonResponse({'success': True, 'username': request.user.username})
+    return JsonResponse({'success': False}, status=401)
 
 # Hanterar registrering
 @csrf_exempt
