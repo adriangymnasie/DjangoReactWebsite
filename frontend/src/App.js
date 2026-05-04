@@ -118,7 +118,7 @@ function App() {
     return (
       <div className="login-page">
         <div className="login-card">
-          <img src="/logo.png" alt="frontend/public/webbserverhemsidalogo.png" className="logo-img" />
+          <img src="/webbserverhemsidalogo.png" alt="SoundVision logo" className="logo-img" />
           <h1>SoundVision</h1>
           <p className="site-subtitle">Din musikupplevelse börjar här</p>
 
@@ -164,7 +164,7 @@ function App() {
     <div className="app-wrapper">
       <header className="site-header">
         <div className="header-left">
-          <img src="/logo.png" alt="SoundVision logo" className="logo-img" />
+          <img src="/webbserverhemsidalogo.png" alt="SoundVision logo" className="logo-img" />
           <span className="site-name">SoundVision</span>
         </div>
         <div className="header-right">
