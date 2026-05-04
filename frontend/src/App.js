@@ -118,7 +118,7 @@ function App() {
     return (
       <div className="login-page">
         <div className="login-card">
-          <img src="/logo.png" alt="frontend/webbserverhemsidalogo.png" className="logo-img" />
+          <img src="/logo.png" alt="frontend/public/webbserverhemsidalogo.png" className="logo-img" />
           <h1>SoundVision</h1>
           <p className="site-subtitle">Din musikupplevelse börjar här</p>
 
