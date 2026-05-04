@@ -1,4 +1,3 @@
-
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -6,7 +5,328 @@
 }
 
 body {
-  font-family: sans-serif;
-  background: white;
-  color: #111;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #FFEF26 0%, #FF8C00 45%, #E3312D 100%);
+  min-height: 100vh;
+  color: #1a1a1a;
+}
+
+/* ── Login page ── */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  background: rgba(255,255,255,0.92);
+  border-radius: 20px;
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+.login-card .logo-img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  margin-bottom: 12px;
+}
+
+.login-card h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #622483, #3661AB);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.login-card .site-subtitle {
+  font-size: 0.85rem;
+  color: #777;
+  margin-bottom: 24px;
+}
+
+.login-input {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.login-input:focus {
+  border-color: #3661AB;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #622483, #3661AB);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+  background: transparent;
+  color: #622483;
+  border: 2px solid #622483;
+  padding: 10px 24px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #622483;
+  color: white;
+}
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.error-msg { color: #e3312d; margin: 8px 0; font-size: 0.9rem; }
+.success-msg { color: #2e7d32; margin: 8px 0; font-size: 0.9rem; }
+
+/* ── Main layout ── */
+.app-wrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+}
+
+/* ── Header ── */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+  border-bottom: 2px solid rgba(255,255,255,0.4);
+  margin-bottom: 24px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-left .logo-img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+}
+
+.site-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  letter-spacing: 1px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-tag {
+  background: rgba(255,255,255,0.85);
+  border-radius: 30px;
+  padding: 6px 16px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #622483;
+}
+
+.btn-logout {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 2px solid rgba(255,255,255,0.6);
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-logout:hover { background: rgba(255,255,255,0.35); }
+
+/* ── Info bar ── */
+.info-bar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.info-card {
+  background: rgba(255,255,255,0.85);
+  border-radius: 14px;
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 140px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.info-card .info-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.info-card .info-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #3661AB;
+}
+
+/* ── Cards ── */
+.card {
+  background: rgba(255,255,255,0.88);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #622483;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f0e0ff;
+}
+
+/* ── Grid ── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 700px) {
+  .main-grid { grid-template-columns: 1fr; }
+  .site-header { flex-direction: column; gap: 12px; }
+}
+
+/* ── Carousel ── */
+.carousel-img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+}
+
+/* ── Calendar override ── */
+.react-calendar {
+  border: none !important;
+  background: transparent !important;
+  width: 100% !important;
+  font-family: inherit !important;
+}
+
+.react-calendar__tile--active {
+  background: linear-gradient(135deg, #622483, #3661AB) !important;
+  color: white !important;
+  border-radius: 8px !important;
+}
+
+.react-calendar__tile:hover {
+  background: rgba(98, 36, 131, 0.15) !important;
+  border-radius: 8px !important;
+}
+
+.react-calendar__navigation button:hover {
+  background: rgba(98, 36, 131, 0.1) !important;
+  border-radius: 8px !important;
+}
+
+/* ── Todo ── */
+.todo-input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.todo-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.todo-input:focus { border-color: #3661AB; }
+
+.todo-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(98, 36, 131, 0.06);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+}
+
+.btn-remove {
+  background: transparent;
+  color: #e3312d;
+  border: 1.5px solid #e3312d;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-remove:hover { background: #e3312d; color: white; }
+
+.selected-date {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 10px;
+  text-align: center;
 }

@@ -75,10 +75,10 @@ function App() {
           setUser(data.username);
           setLoginError('');
         } else {
-          setLoginError('❌ Fel användarnamn eller lösenord');
+          setLoginError('Fel användarnamn eller lösenord');
         }
       })
-      .catch(() => setLoginError('❌ Kunde inte nå servern'));
+      .catch(() => setLoginError('Kunde inte nå servern'));
   };
 
   const handleRegister = () => {
@@ -95,97 +95,132 @@ function App() {
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          setRegisterSuccess('✅ Konto skapat! Du kan nu logga in.');
+          setRegisterSuccess('Konto skapat! Du kan nu logga in.');
           setIsRegistering(false);
           setLoginError('');
         } else {
-          setLoginError('❌ ' + data.error);
+          setLoginError(data.error);
         }
       })
-      .catch(() => setLoginError('❌ Kunde inte nå servern'));
+      .catch(() => setLoginError('Kunde inte nå servern'));
   };
 
   const handleLogout = () => {
-    fetch('/api/logout/', { method: 'POST' })
+    fetch('/api/logout/', { method: 'POST', credentials: 'include' })
       .then(() => setUser(null));
+  };
+
+  const handleKeyDown = (e, action) => {
+    if (e.key === 'Enter') action();
   };
 
   if (!user) {
     return (
-      <div className="app" style={{maxWidth: '400px', margin: '100px auto'}}>
-        <h1>{isRegistering ? 'Skapa konto' : 'Logga in'}</h1>
+      <div className="login-page">
+        <div className="login-card">
+          <img src="/logo.png" alt="SoundVision logo" className="logo-img" />
+          <h1>SoundVision</h1>
+          <p className="site-subtitle">Din musikupplevelse börjar här</p>
 
-        {registerSuccess && <p style={{color: 'green'}}>{registerSuccess}</p>}
+          {registerSuccess && <p className="success-msg">{registerSuccess}</p>}
 
-        <input
-          placeholder="Användarnamn"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          style={{display: 'block', marginBottom: '10px', width: '100%', padding: '8px'}}
-        />
-        <input
-          placeholder="Lösenord"
-          type="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          style={{display: 'block', marginBottom: '10px', width: '100%', padding: '8px'}}
-        />
+          <input
+            className="login-input"
+            placeholder="Användarnamn"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            onKeyDown={e => handleKeyDown(e, isRegistering ? handleRegister : handleLogin)}
+          />
+          <input
+            className="login-input"
+            placeholder="Lösenord"
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            onKeyDown={e => handleKeyDown(e, isRegistering ? handleRegister : handleLogin)}
+          />
 
-        {loginError && <p style={{color: 'red'}}>{loginError}</p>}
+          {loginError && <p className="error-msg">{loginError}</p>}
 
-        {isRegistering ? (
-          <>
-            <button onClick={handleRegister} style={{padding: '8px 20px', marginRight: '10px'}}>Skapa konto</button>
-            <button onClick={() => { setIsRegistering(false); setLoginError(''); }}>Tillbaka</button>
-          </>
-        ) : (
-          <>
-            <button onClick={handleLogin} style={{padding: '8px 20px', marginRight: '10px'}}>Logga in</button>
-            <button onClick={() => { setIsRegistering(true); setLoginError(''); }}>Skapa konto</button>
-          </>
-        )}
+          <div className="btn-row">
+            {isRegistering ? (
+              <>
+                <button className="btn-primary" onClick={handleRegister}>Skapa konto</button>
+                <button className="btn-secondary" onClick={() => { setIsRegistering(false); setLoginError(''); }}>Tillbaka</button>
+              </>
+            ) : (
+              <>
+                <button className="btn-primary" onClick={handleLogin}>Logga in</button>
+                <button className="btn-secondary" onClick={() => { setIsRegistering(true); setLoginError(''); }}>Skapa konto</button>
+              </>
+            )}
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="app">
-      <h1>Min Hemsida</h1>
-      <p>Inloggad som: {user} <button onClick={handleLogout}>Logga ut</button></p>
+    <div className="app-wrapper">
+      <header className="site-header">
+        <div className="header-left">
+          <img src="/logo.png" alt="SoundVision logo" className="logo-img" />
+          <span className="site-name">SoundVision</span>
+        </div>
+        <div className="header-right">
+          <span className="user-tag">{user}</span>
+          <button className="btn-logout" onClick={handleLogout}>Logga ut</button>
+        </div>
+      </header>
 
-      {/* Datum och klocka */}
-      <p>{time.toLocaleDateString('sv-SE')} {time.toLocaleTimeString('sv-SE')}</p>
-
-      {/* Unika besökare */}
-      <p>Unika besökare: {visitors}</p>
-
-      {/* Bildspel och kalender bredvid varandra */}
-      <div style={{display: 'flex', flexDirection: 'row', gap: '20px', alignItems: 'flex-start', width: '100%'}}>
-        <img src={images[currentImage]} alt="bildspel" style={{width: '50%', height: 'auto'}} />
-        <div style={{flex: 1}}>
-          <Calendar onChange={setDate} value={date} />
-          <p>Valt datum: {date.toLocaleDateString('sv-SE')}</p>
+      <div className="info-bar">
+        <div className="info-card">
+          <span className="info-label">Tid</span>
+          <span className="info-value">{time.toLocaleTimeString('sv-SE')}</span>
+        </div>
+        <div className="info-card">
+          <span className="info-label">Datum</span>
+          <span className="info-value">{time.toLocaleDateString('sv-SE')}</span>
+        </div>
+        <div className="info-card">
+          <span className="info-label">Unika besökare</span>
+          <span className="info-value">{visitors}</span>
         </div>
       </div>
 
-      {/* Todo-lista */}
-      <div style={{marginTop: '20px'}}>
+      <div className="main-grid">
+        <div className="card">
+          <h2>Bildspel</h2>
+          <img src={images[currentImage]} alt="bildspel" className="carousel-img" />
+        </div>
+        <div className="card">
+          <h2>Kalender</h2>
+          <Calendar onChange={setDate} value={date} locale="sv-SE" />
+          <p className="selected-date">Valt datum: {date.toLocaleDateString('sv-SE')}</p>
+        </div>
+      </div>
+
+      <div className="card">
         <h2>Todo-lista</h2>
-        <input
-          value={todoInput}
-          onChange={e => setTodoInput(e.target.value)}
-          placeholder="Lägg till uppgift..."
-        />
-        <button onClick={addTodo}>Lägg till</button>
-        <ul>
+        <div className="todo-input-row">
+          <input
+            className="todo-input"
+            value={todoInput}
+            onChange={e => setTodoInput(e.target.value)}
+            onKeyDown={e => handleKeyDown(e, addTodo)}
+            placeholder="Lägg till uppgift..."
+          />
+          <button className="btn-primary" onClick={addTodo}>Lägg till</button>
+        </div>
+        <ul className="todo-list">
           {todos.map((todo, index) => (
-            <li key={index}>
-              {todo} <button onClick={() => removeTodo(index)}>Ta bort</button>
+            <li className="todo-item" key={index}>
+              <span>{todo}</span>
+              <button className="btn-remove" onClick={() => removeTodo(index)}>Ta bort</button>
             </li>
           ))}
         </ul>
       </div>
-
     </div>
   );
 }
