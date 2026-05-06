@@ -2,6 +2,7 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import Mohammed from "./mohammed";
 
 function App() {
   const [visitors, setVisitors] = useState(0);
@@ -120,6 +121,13 @@ function App() {
         <div className="login-card">
           <img src="/webbserverhemsidalogo.png" alt="SoundVision logo" className="logo-img" />
           <h1>SoundVision</h1>
+          
+          <div className="btntop">
+            <Link to="/Adrian" className="btn">Adrian</Link>
+            <Link to="/mohammed" className="btn">Mohammed</Link>
+            <Link to="/Philip" className="btn">Philip</Link>
+          </div>
+
           <p className="site-subtitle">Din musikupplevelse börjar här</p>
 
           {registerSuccess && <p className="success-msg">{registerSuccess}</p>}
