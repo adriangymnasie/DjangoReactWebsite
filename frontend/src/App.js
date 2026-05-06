@@ -122,11 +122,7 @@ function App() {
           <img src="/webbserverhemsidalogo.png" alt="SoundVision logo" className="logo-img" />
           <h1>SoundVision</h1>
           
-          <div className="btntop">
-            <Link to="/Adrian" className="btntop">Adrian</Link>
-            <Link to="/mohammed" className="btntop">Mohammed</Link>
-            <Link to="/Philip" className="btntop">Philip</Link>
-          </div> 
+          
 
           <p className="site-subtitle">Din musikupplevelse börjar här</p>
 
@@ -207,6 +203,12 @@ function App() {
           <p className="selected-date">Valt datum: {date.toLocaleDateString('sv-SE')}</p>
         </div>
       </div>
+
+      <div className="btntop">
+            <Link to="/Adrian" className="btntop">Adrian</Link>
+            <Link to="/mohammed" className="btntop">Mohammed</Link>
+            <Link to="/Philip" className="btntop">Philip</Link>
+      </div> 
 
       <div className="card">
         <h2>Todo-lista</h2>

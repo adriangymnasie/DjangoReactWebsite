@@ -1,5 +1,5 @@
-function Mohammed() {
-    return <h1>Mohammed</h1>;
+function Adrian() {
+    return <h1>Adrian</h1>;
   }
   
-  export default Mohammed;
+  export default Adrian;
