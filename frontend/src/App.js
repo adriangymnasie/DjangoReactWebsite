@@ -123,10 +123,10 @@ function App() {
           <h1>SoundVision</h1>
           
           <div className="btntop">
-            <Link to="/Adrian" className="btn">Adrian</Link>
-            <Link to="/mohammed" className="btn">Mohammed</Link>
-            <Link to="/Philip" className="btn">Philip</Link>
-          </div>
+            <Link to="/Adrian" className="btntop">Adrian</Link>
+            <Link to="/mohammed" className="btntop">Mohammed</Link>
+            <Link to="/Philip" className="btntop">Philip</Link>
+          </div> 
 
           <p className="site-subtitle">Din musikupplevelse börjar här</p>
 
