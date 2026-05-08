@@ -7,7 +7,7 @@ import Adrian from './adrian';
 import Mohammed from './mohammed';
 import Philip from './philip';
 
-
+const API_URL = process.env.REACT_APP_API_URL || '';
 
 function App() {
   const [visitors, setVisitors] = useState(0);
@@ -23,13 +23,7 @@ function App() {
   const [isRegistering, setIsRegistering] = useState(false);
   const [registerSuccess, setRegisterSuccess] = useState('');
   const [messages, setMessages] = useState([]);
-const [messageInput, setMessageInput] = useState('');
-
-const sendMessage = () => {
-  if (messageInput.trim() === '') return;
-  setMessages([...messages, { text: messageInput, author: user }]);
-  setMessageInput('');
-};
+  const [messageInput, setMessageInput] = useState('');
 
   const images = [
     '/671.jpg',
@@ -38,14 +32,14 @@ const sendMessage = () => {
   ];
 
   useEffect(() => {
-    fetch('/api/visitors/')
+    fetch(`${API_URL}/api/visitors/`)
       .then(res => res.ok ? res.json() : null)
       .then(data => { if (data?.unique_visitors !== undefined) setVisitors(data.unique_visitors); })
       .catch(() => {});
   }, []);
 
   useEffect(() => {
-    fetch('/api/me/', { credentials: 'include' })
+    fetch(`${API_URL}/api/me/`, { credentials: 'include' })
       .then(res => res.ok ? res.json() : null)
       .then(data => { if (data?.success) setUser(data.username); });
   }, []);
@@ -62,14 +56,72 @@ const sendMessage = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Hämta todos när användaren loggat in
+  useEffect(() => {
+    if (!user) return;
+    fetch(`${API_URL}/api/todos/`, { credentials: 'include' })
+      .then(res => res.ok ? res.json() : null)
+      .then(data => { if (data?.todos) setTodos(data.todos); })
+      .catch(() => {});
+  }, [user]);
+
+  // Hämta och polla meddelanden var 5:e sekund
+  useEffect(() => {
+    if (!user) return;
+    const fetchMessages = () => {
+      fetch(`${API_URL}/api/messages/`, { credentials: 'include' })
+        .then(res => res.ok ? res.json() : null)
+        .then(data => { if (data?.messages) setMessages(data.messages); })
+        .catch(() => {});
+    };
+    fetchMessages();
+    const interval = setInterval(fetchMessages, 5000);
+    return () => clearInterval(interval);
+  }, [user]);
+
   const addTodo = () => {
     if (todoInput.trim() === '') return;
-    setTodos([...todos, todoInput]);
-    setTodoInput('');
+    fetch(`${API_URL}/api/todos/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ text: todoInput }),
+    })
+      .then(res => res.ok ? res.json() : null)
+      .then(todo => {
+        if (todo?.id) {
+          setTodos(prev => [...prev, todo]);
+          setTodoInput('');
+        }
+      })
+      .catch(() => {});
   };
 
-  const removeTodo = (index) => {
-    setTodos(todos.filter((_, i) => i !== index));
+  const removeTodo = (id) => {
+    fetch(`${API_URL}/api/todos/${id}/`, {
+      method: 'DELETE',
+      credentials: 'include',
+    })
+      .then(res => { if (res.ok) setTodos(prev => prev.filter(t => t.id !== id)); })
+      .catch(() => {});
+  };
+
+  const sendMessage = () => {
+    if (messageInput.trim() === '') return;
+    fetch(`${API_URL}/api/messages/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ text: messageInput }),
+    })
+      .then(res => res.ok ? res.json() : null)
+      .then(msg => {
+        if (msg?.id) {
+          setMessages(prev => [...prev, msg]);
+          setMessageInput('');
+        }
+      })
+      .catch(() => {});
   };
 
   const handleLogin = () => {
@@ -77,7 +129,7 @@ const sendMessage = () => {
       setLoginError('Fyll i både användarnamn och lösenord');
       return;
     }
-    fetch('/api/login/', {
+    fetch(`${API_URL}/api/login/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -100,7 +152,7 @@ const sendMessage = () => {
       setLoginError('Fyll i både användarnamn och lösenord');
       return;
     }
-    fetch('/api/register/', {
+    fetch(`${API_URL}/api/register/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -120,7 +172,7 @@ const sendMessage = () => {
   };
 
   const handleLogout = () => {
-    fetch('/api/logout/', { method: 'POST', credentials: 'include' })
+    fetch(`${API_URL}/api/logout/`, { method: 'POST', credentials: 'include' })
       .then(() => setUser(null));
   };
 
@@ -231,53 +283,49 @@ const sendMessage = () => {
               <button className="btn-primary" onClick={addTodo}>Lägg till</button>
             </div>
             <ul className="todo-list">
-              {todos.map((todo, index) => (
-                <li className="todo-item" key={index}>
-                  <span>{todo}</span>
-                  <button className="btn-remove" onClick={() => removeTodo(index)}>Ta bort</button>
+              {todos.map((todo) => (
+                <li className="todo-item" key={todo.id}>
+                  <span>{todo.text}</span>
+                  <button className="btn-remove" onClick={() => removeTodo(todo.id)}>Ta bort</button>
                 </li>
               ))}
             </ul>
           </div>
-          
+
           <div className='btntop'>
-             <a href="https://www.youtube.com/watch?v=Aq5WXmQQooo" target="_blank" rel="noreferrer"> Klicka på knappen
-             </a>
+            <a href="https://www.youtube.com/watch?v=Aq5WXmQQooo" target="_blank" rel="noreferrer">Klicka på knappen</a>
           </div>
-          <div className='forum'> <h2 className='forum-title'>Forum</h2>
-  <div className='forumtextbar'>
-    <div className='forum-messages'>
-      {messages.map((msg, index) => (
-        <div key={index} className='forum-message'>
-          <strong>{msg.author}:</strong> {msg.text}
+
+          <div className='forum'>
+            <h2 className='forum-title'>Forum</h2>
+            <div className='forumtextbar'>
+              <div className='forum-messages'>
+                {messages.map((msg) => (
+                  <div key={msg.id} className='forum-message'>
+                    <strong>{msg.author}:</strong> {msg.text}
+                  </div>
+                ))}
+              </div>
+              <div className='forum-input-row'>
+                <input
+                  className='forum-input'
+                  placeholder='Skriv ett meddelande...'
+                  value={messageInput}
+                  onChange={e => setMessageInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') sendMessage(); }}
+                />
+                <button className='btn-primary' onClick={sendMessage}>Skicka</button>
+              </div>
+            </div>
+          </div>
+
         </div>
-      ))}
-    </div>
-    <div className='forum-input-row'>
-      <input
-        className='forum-input'
-        placeholder='Skriv ett meddelande...'
-        value={messageInput}
-        onChange={e => setMessageInput(e.target.value)}
-        onKeyDown={e => { if (e.key === 'Enter') sendMessage(); }}
-      />
-      <button className='btn-primary' onClick={sendMessage}>Skicka</button>
-       </div>
-      </div>
-    </div>
-          
-    </div>
       } />
       <Route path="/adrian" element={<Adrian />} />
       <Route path="/mohammed" element={<Mohammed />} />
       <Route path="/philip" element={<Philip />} />
     </Routes>
-    
-
   );
-  
-
 }
-
 
 export default App;

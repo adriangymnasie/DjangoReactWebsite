@@ -34,11 +34,8 @@ services:
       db:
         condition: service_healthy
     environment:
-      - DATABASE_NAME=myapp
-      - DATABASE_USER=dbuser
-      - DATABASE_PASSWORD=dbpassword
-      - DATABASE_HOST=db
-      - DATABASE_PORT=5432
+      - DATABASE_URL=postgres://dbuser:dbpassword@db:5432/myapp
+      - DEBUG=True
 
   frontend:
     build: ./frontend
