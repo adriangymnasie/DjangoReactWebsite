@@ -220,6 +220,13 @@ body {
   box-shadow: 0 4px 20px rgba(0,0,0,0.12);
 }
 
+.cardsong {
+  background: rgba(255,255,255,0.88);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  min-height: 350px;
+}
 .card h2 {
   font-size: 1.1rem;
   font-weight: 700;
