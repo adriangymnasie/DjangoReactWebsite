@@ -2,6 +2,10 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
+import { Routes, Route, Link } from 'react-router-dom';
+import Adrian from './adrian';
+import Mohammed from './mohammed';
+import Philip from '/philip';
 
 function App() {
   const [visitors, setVisitors] = useState(0);
@@ -121,9 +125,7 @@ function App() {
           <img src="/webbserverhemsidalogo.png" alt="SoundVision logo" className="logo-img" />
           <h1>SoundVision</h1>
           <p className="site-subtitle">Din musikupplevelse börjar här</p>
-
           {registerSuccess && <p className="success-msg">{registerSuccess}</p>}
-
           <input
             className="login-input"
             placeholder="Användarnamn"
@@ -139,9 +141,7 @@ function App() {
             onChange={e => setPassword(e.target.value)}
             onKeyDown={e => handleKeyDown(e, isRegistering ? handleRegister : handleLogin)}
           />
-
           {loginError && <p className="error-msg">{loginError}</p>}
-
           <div className="btn-row">
             {isRegistering ? (
               <>
@@ -161,71 +161,79 @@ function App() {
   }
 
   return (
-    <div className="app-wrapper">
-      <header className="site-header">
-        <div className="header-left">
-          <img src="/webbserverhemsidalogo.png" alt="SoundVision logo" className="logo-img" />
-          <span className="site-name">SoundVision</span>
-        </div>
-        <div className="header-right">
-          <span className="user-tag">{user}</span>
-          <button className="btn-logout" onClick={handleLogout}>Logga ut</button>
-        </div>
-      </header>
+    <Routes>
+      <Route path="/" element={
+        <div className="app-wrapper">
+          <header className="site-header">
+            <div className="header-left">
+              <img src="/webbserverhemsidalogo.png" alt="SoundVision logo" className="logo-img" />
+              <span className="site-name">SoundVision</span>
+            </div>
+            <div className="header-right">
+              <span className="user-tag">{user}</span>
+              <button className="btn-logout" onClick={handleLogout}>Logga ut</button>
+            </div>
+          </header>
 
-      <div className="info-bar">
-        <div className="info-card">
-          <span className="info-label">Tid</span>
-          <span className="info-value">{time.toLocaleTimeString('sv-SE')}</span>
-        </div>
-        <div className="info-card">
-          <span className="info-label">Datum</span>
-          <span className="info-value">{time.toLocaleDateString('sv-SE')}</span>
-        </div>
-        <div className="info-card">
-          <span className="info-label">Unika besökare</span>
-          <span className="info-value">{visitors}</span>
-        </div>
-      </div>
+          <div className="info-bar">
+            <div className="info-card">
+              <span className="info-label">Tid</span>
+              <span className="info-value">{time.toLocaleTimeString('sv-SE')}</span>
+            </div>
+            <div className="info-card">
+              <span className="info-label">Datum</span>
+              <span className="info-value">{time.toLocaleDateString('sv-SE')}</span>
+            </div>
+            <div className="info-card">
+              <span className="info-label">Unika besökare</span>
+              <span className="info-value">{visitors}</span>
+            </div>
+          </div>
 
-      <div className="main-grid">
-        <div className="card">
-          <h2>Bildspel</h2>
-          <img src={images[currentImage]} alt="bildspel" className="carousel-img" />
-        </div>
-        <div className="card">
-          <h2>Kalender</h2>
-          <Calendar onChange={setDate} value={date} locale="sv-SE" />
-          <p className="selected-date">Valt datum: {date.toLocaleDateString('sv-SE')}</p>
-        </div>
-      </div>
-      <div className="cardsong">
-        <h2>låt</h2>
-      </div>
-    
+          <div className="main-grid">
+            <div className="card">
+              <h2>Bildspel</h2>
+              <img src={images[currentImage]} alt="bildspel" className="carousel-img" />
+            </div>
+            <div className="card">
+              <h2>Kalender</h2>
+              <Calendar onChange={setDate} value={date} locale="sv-SE" />
+              <p className="selected-date">Valt datum: {date.toLocaleDateString('sv-SE')}</p>
+            </div>
+          </div>
 
-      <div className="card">
-        <h2>Todo-lista</h2>
-        <div className="todo-input-row">
-          <input
-            className="todo-input"
-            value={todoInput}
-            onChange={e => setTodoInput(e.target.value)}
-            onKeyDown={e => handleKeyDown(e, addTodo)}
-            placeholder="Lägg till uppgift..."
-          />
-          <button className="btn-primary" onClick={addTodo}>Lägg till</button>
+          <div className="btntop">
+            <Link to="/adrian" className="btntop">Adrian</Link>
+            <Link to="/mohammed" className="btntop">Mohammed</Link>
+            <Link to="/philip" className="btntop">Philip</Link>
+          </div>
+
+          <div className="card">
+            <h2>Todo-lista</h2>
+            <div className="todo-input-row">
+              <input
+                className="todo-input"
+                value={todoInput}
+                onChange={e => setTodoInput(e.target.value)}
+                onKeyDown={e => handleKeyDown(e, addTodo)}
+                placeholder="Lägg till uppgift..."
+              />
+              <button className="btn-primary" onClick={addTodo}>Lägg till</button>
+            </div>
+            <ul className="todo-list">
+              {todos.map((todo, index) => (
+                <li className="todo-item" key={index}>
+                  <span>{todo}</span>
+                  <button className="btn-remove" onClick={() => removeTodo(index)}>Ta bort</button>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <ul className="todo-list">
-          {todos.map((todo, index) => (
-            <li className="todo-item" key={index}>
-              <span>{todo}</span>
-              <button className="btn-remove" onClick={() => removeTodo(index)}>Ta bort</button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+      } />
+      <Route path="/adrian" element={<Adrian />} />
+      <Route path="/mohammed" element={<Mohammed />} />
+    </Routes>
   );
 }
 

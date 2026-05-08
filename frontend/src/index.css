@@ -95,6 +95,7 @@ body {
   transition: background 0.2s, color 0.2s;
 }
 
+
 .btn-secondary:hover {
   background: #622483;
   color: white;
@@ -336,4 +337,19 @@ body {
   color: #666;
   margin-top: 10px;
   text-align: center;
+}
+
+.btntop{
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 4px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.88);
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  flex: 1;
 }
