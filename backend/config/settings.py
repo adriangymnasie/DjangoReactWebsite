@@ -91,8 +91,7 @@ if FRONTEND_URL:
 
 CORS_ALLOW_CREDENTIALS = True
 
-# Krävs för cookies över olika domäner (frontend/backend på Render)
-SESSION_COOKIE_SAMESITE = 'None'
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = 'None'
-CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SAMESITE = 'None' if not DEBUG else 'Lax'
+CSRF_COOKIE_SAMESITE = 'None' if not DEBUG else 'Lax'
