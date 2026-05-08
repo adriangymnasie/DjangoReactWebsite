@@ -5,7 +5,9 @@ import 'react-calendar/dist/Calendar.css';
 import { Routes, Route, Link } from 'react-router-dom';
 import Adrian from './adrian';
 import Mohammed from './mohammed';
-import Philip from '/philip';
+import Philip from './philip';
+
+
 
 function App() {
   const [visitors, setVisitors] = useState(0);
@@ -20,6 +22,14 @@ function App() {
   const [loginError, setLoginError] = useState('');
   const [isRegistering, setIsRegistering] = useState(false);
   const [registerSuccess, setRegisterSuccess] = useState('');
+  const [messages, setMessages] = useState([]);
+const [messageInput, setMessageInput] = useState('');
+
+const sendMessage = () => {
+  if (messageInput.trim() === '') return;
+  setMessages([...messages, { text: messageInput, author: user }]);
+  setMessageInput('');
+};
 
   const images = [
     '/671.jpg',
@@ -229,12 +239,45 @@ function App() {
               ))}
             </ul>
           </div>
+          
+          <div className='btntop'>
+             <a href="https://www.youtube.com/watch?v=Aq5WXmQQooo" target="_blank" rel="noreferrer"> Klicka på knappen
+             </a>
+          </div>
+          <div className='forum'> <h2 className='forum-title'>Forum</h2>
+  <div className='forumtextbar'>
+    <div className='forum-messages'>
+      {messages.map((msg, index) => (
+        <div key={index} className='forum-message'>
+          <strong>{msg.author}:</strong> {msg.text}
         </div>
+      ))}
+    </div>
+    <div className='forum-input-row'>
+      <input
+        className='forum-input'
+        placeholder='Skriv ett meddelande...'
+        value={messageInput}
+        onChange={e => setMessageInput(e.target.value)}
+        onKeyDown={e => { if (e.key === 'Enter') sendMessage(); }}
+      />
+      <button className='btn-primary' onClick={sendMessage}>Skicka</button>
+       </div>
+      </div>
+    </div>
+          
+    </div>
       } />
       <Route path="/adrian" element={<Adrian />} />
       <Route path="/mohammed" element={<Mohammed />} />
+      <Route path="/philip" element={<Philip />} />
     </Routes>
+    
+
   );
+  
+
 }
+
 
 export default App;
