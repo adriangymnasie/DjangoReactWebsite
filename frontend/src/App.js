@@ -31,6 +31,7 @@ function App() {
     'https://picsum.photos/800/400?random=3',
   ];
 
+  // Besökarräknare: hämtar antal unika besökare från servern vid sidladdning
   useEffect(() => {
     fetch(`${API_URL}/api/visitors/`)
       .then(res => res.ok ? res.json() : null)
@@ -38,17 +39,20 @@ function App() {
       .catch(() => {});
   }, []);
 
+  // Inloggningskoll: frågar servern om användaren redan är inloggad via cookie
   useEffect(() => {
     fetch(`${API_URL}/api/me/`, { credentials: 'include' })
       .then(res => res.ok ? res.json() : null)
       .then(data => { if (data?.success) setUser(data.username); });
   }, []);
 
+  // Klocka: hämtar systemtiden från webbläsaren varje sekund
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
+  // Bildspel: byter bild var 3:e sekund, börjar om från 0 när den nått sista bilden
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage(prev => (prev + 1) % images.length);
@@ -56,7 +60,7 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // Hämta todos när användaren loggat in
+  // Todolista: hämtar alla todos från databasen när användaren loggar in
   useEffect(() => {
     if (!user) return;
     fetch(`${API_URL}/api/todos/`, { credentials: 'include' })
@@ -65,7 +69,7 @@ function App() {
       .catch(() => {});
   }, [user]);
 
-  // Hämta och polla meddelanden var 5:e sekund
+  // Forum: hämtar meddelanden från databasen och uppdaterar var 5:e sekund
   useEffect(() => {
     if (!user) return;
     const fetchMessages = () => {
